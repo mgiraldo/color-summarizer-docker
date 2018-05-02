@@ -3,9 +3,13 @@ require "sinatra/json"
 require 'open3'
 require 'open-uri'
 
+get "/image" do
+  send_file(temp_file)
+end
+
 get '/:type?' do
-  temp_file = "temp.jpg"
-  clusters = 5
+  clusters = 4
+  size = 100
   url = params['url']
   if !validURI?(url)
     halt 400
@@ -15,13 +19,13 @@ get '/:type?' do
     file << open(url).read
   end
   output = ""
-  cmd = "perl -X /usr/src/app/bin/colorsummarizer -image /usr/src/app/#{temp_file} -#{type} -stats -histogram -clusters #{clusters} -clip transparent,white,black -timer"
+  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{temp_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters} -clip transparent,white,black"
   p cmd
   Open3.popen3(cmd) {|i,o,e,t|
-    line = o.read.chomp.sub("/usr/src/app/#{temp_file}", "").strip
+    line = o.read.chomp.gsub("#{temp_file}", "").strip
     output = output + line
   }
-  File.delete(temp_file)
+  # File.delete(temp_file)
   if type.eql?("json")
     headers['Content-Type'] = "application/json"
     json JSON.parse(output)
@@ -34,6 +38,14 @@ get '/:type?' do
   else
     output
   end
+end
+
+def folder
+  "/usr/src/app"
+end
+
+def temp_file
+  "#{folder}/temp.jpg"
 end
 
 def validURI?(value)
