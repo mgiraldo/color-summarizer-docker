@@ -1,27 +1,25 @@
 # color-summarizer-docker
-This runs the colorsummarizer on a directory you specify. 
+
+This runs the colorsummarizer on a directory you specify.
 
 To use:
 
-
 ```
-
 docker pull thisismattmiller/colorsummarizer
 docker run -it -v ~/Downloads:/usr/images thisismattmiller/colorsummarizer
-
 ```
-The `-v ~/Downloads:/usr/images` part tells the script what directory to run the tool on. So here I am running it on all the *.jpg in my Downloads folder. You can then pipe the results of this command to a file.
+
+The `-v ~/Downloads:/usr/images` part tells the script what directory to run the tool on. So here I am running it on all the \*.jpg in my Downloads folder. You can then pipe the results of this command to a file.
 
 If you want to stop the script (if it is running on a lot of files) in another window:
 
 ```
-
 docker ps
 docker kill <container_id_here>
 ```
 
+# To Build
 
- # To Build
 ```
 git clone https://github.com/thisismattmiller/color-summarizer-docker.git
 cd color-summarizer-docker
@@ -29,6 +27,7 @@ docker build -t colorsummarizer .
 ```
 
 You can modify the `Dockerfile` on line 18 to make colorsumarizer do what you want:
+
 ```
 Usage:
       # output format XML, text or JSON
@@ -51,7 +50,7 @@ Usage:
       # crop left by 20, right by 50, top by 10 and bottom by 30
       colorsummarizer -image img/ferns-100.jpg -width 50 -cropx 20,50 -cropy 10,30  -text
 
-      # extract a rectangle from the image with top left corner at (20,10) and 
+      # extract a rectangle from the image with top left corner at (20,10) and
       # width 50 and height 100
       colorsummarizer -image img/ferns-100.jpg -width 50 -cropx 20 -cropw 50 -cropy 10 -croph 100 -text
 
@@ -107,3 +106,8 @@ Usage:
       # print timings
       colorsummarizer -timer
 ```
+
+## Credits
+
+[Matt Miller](https://github.com/thisismattmiller/color-summarizer-docker)
+[James Higginbotham](https://dzone.com/articles/deploying-rest-apis-to-docker-using-ruby-and-sinat)

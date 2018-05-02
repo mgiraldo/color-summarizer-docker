@@ -1,0 +1,12 @@
+version: '3'
+services:
+  webapp:
+    build:
+      context: .
+    command: bundle exec ruby app.rb
+    # command: perl -X /usr/src/app/bin/colorsummarizer -debug
+    ports:
+    - "4567:4567"
+    environment:
+      - RAILS_ENV=production
+      - RACK_ENV=production

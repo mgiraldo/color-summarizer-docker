@@ -1,18 +1,33 @@
-FROM perl:5.20
-COPY colorsummarizer-0.77 /usr/src/myapp
-WORKDIR /usr/src/myapp
+FROM ruby:2.3
 
-RUN cpan Config::General
-RUN cpan Math::VecStat
-RUN cpan Math::Round
-RUN cpan Statistics::Descriptive
-RUN cpan Statistics::Distributions
-RUN cpan Statistics::Basic 
-RUN cpan SVG
-RUN cpan Graphics::ColorObject
-RUN cpan JSON::XS
-RUN cpan Algorithm::Cluster
-RUN cpan Imager
+ENV APP_HOME /usr/src/app
+ENV RACK_ENV production
+ENV MAIN_APP_FILE app.rb
 
+RUN mkdir -p ${APP_HOME}
 
-CMD ["perl", "-X", "/usr/src/myapp/bin/colorsummarizer", "-dir", "\"/usr/images/*.jpg\"", "-json"]
+COPY colorsummarizer-0.77 ${APP_HOME}
+
+WORKDIR ${APP_HOME}
+
+# install cpanminus because less verbose
+RUN curl -L https://cpanmin.us | perl - App::cpanminus
+
+# install color summarizer dependencies
+RUN cpanm Config::General
+RUN cpanm Math::VecStat
+RUN cpanm Math::Round
+RUN cpanm Statistics::Descriptive
+RUN cpanm Statistics::Distributions
+RUN cpanm Statistics::Basic 
+RUN cpanm SVG
+RUN cpanm Graphics::ColorObject
+RUN cpanm JSON::XS
+RUN cpanm Algorithm::Cluster
+RUN cpanm Imager
+
+# install sinatra app stuff
+ADD Gemfile ${APP_HOME}
+RUN bundle install
+ADD Gemfile.lock ${APP_HOME}
+ADD app.rb ${APP_HOME}
