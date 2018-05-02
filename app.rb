@@ -10,7 +10,7 @@ get '/:format?' do
     file << open(url).read
   end
   output = ""
-  Open3.popen3("perl -X /usr/src/app/bin/colorsummarizer /usr/src/app/#{temp_file} -json
+  Open3.popen3("perl -X /usr/src/app/bin/colorsummarizer -image /usr/src/app/#{temp_file} -json
 ") {|i,o,e,t|
     output = output + o.read.chomp
   }
