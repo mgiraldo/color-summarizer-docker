@@ -3,19 +3,33 @@ require "sinatra/json"
 require 'open3'
 require 'open-uri'
 
-get '/:format?' do
+get '/:type?' do
   temp_file = "temp.jpg"
   url = params['url']
+  type = params['type'] || "json"
   open(temp_file, "wb") do |file|
     file << open(url).read
   end
   output = ""
-  Open3.popen3("perl -X /usr/src/app/bin/colorsummarizer -image /usr/src/app/#{temp_file} -json
-") {|i,o,e,t|
-    output = output + o.read.chomp
+  cmd = "perl -X /usr/src/app/bin/colorsummarizer -image /usr/src/app/#{temp_file} -#{type} -all"
+  p cmd
+  Open3.popen3(cmd) {|i,o,e,t|
+    line = o.read.chomp.sub("/usr/src/app/#{temp_file}", "").strip
+    output = output + line
   }
   File.delete(temp_file)
-  json JSON.parse(output)
+  if type.eql?("json")
+    headers['Content-Type'] = "application/json"
+    json JSON.parse(output)
+  elsif type.eql?("text")
+    headers['Content-Type'] = "text/plain"
+    output
+  elsif type.eql?("xml")
+    headers['Content-Type'] = "text/xml"
+    output
+  else
+    output
+  end
 end
 
 def validURI?(value)
