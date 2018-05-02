@@ -5,13 +5,17 @@ require 'open-uri'
 
 get '/:type?' do
   temp_file = "temp.jpg"
+  clusters = 5
   url = params['url']
+  if !validURI?(url)
+    halt 400
+  end
   type = params['type'] || "json"
   open(temp_file, "wb") do |file|
     file << open(url).read
   end
   output = ""
-  cmd = "perl -X /usr/src/app/bin/colorsummarizer -image /usr/src/app/#{temp_file} -#{type} -all"
+  cmd = "perl -X /usr/src/app/bin/colorsummarizer -image /usr/src/app/#{temp_file} -#{type} -stats -histogram -clusters #{clusters} -clip transparent,white,black -timer"
   p cmd
   Open3.popen3(cmd) {|i,o,e,t|
     line = o.read.chomp.sub("/usr/src/app/#{temp_file}", "").strip
