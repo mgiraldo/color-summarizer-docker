@@ -4,29 +4,45 @@ require 'open3'
 require 'open-uri'
 
 get "/image" do
-  send_file(temp_file)
+  if File.exist?(temp_file)
+    send_file(temp_file)
+  else
+    halt 404
+  end
 end
 
 get '/:type?' do
-  clusters = 4
+  clusters = 5
   size = 100
   url = params['url']
+  pretty = false
   if !validURI?(url)
     halt 400
   end
   type = params['type'] || "json"
+  if type.eql?("pretty")
+    type = "json"
+    pretty = true
+  end
   open(temp_file, "wb") do |file|
     file << open(url).read
   end
   output = ""
-  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{temp_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters} -clip transparent,white,black"
+  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{temp_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
   p cmd
   Open3.popen3(cmd) {|i,o,e,t|
     line = o.read.chomp.gsub("#{temp_file}", "").strip
     output = output + line
   }
+  hexes = []
+  if pretty
+    json = JSON.parse(output)
+    json["data"].each do |key, hex|
+      hexes.push(hex)
+    end
+  end
   # File.delete(temp_file)
-  if type.eql?("json")
+  if !pretty && type.eql?("json")
     headers['Content-Type'] = "application/json"
     json JSON.parse(output)
   elsif type.eql?("text")
@@ -35,6 +51,8 @@ get '/:type?' do
   elsif type.eql?("xml")
     headers['Content-Type'] = "text/xml"
     output
+  elsif pretty
+    haml :pretty, :locals => {:url => url, :output => output, :image => temp_filename, :hexes => hexes}
   else
     output
   end
@@ -45,7 +63,11 @@ def folder
 end
 
 def temp_file
-  "#{folder}/temp.jpg"
+  "#{folder}/#{temp_filename}"
+end
+
+def temp_filename
+  "temp.jpg"
 end
 
 def validURI?(value)
@@ -54,3 +76,18 @@ def validURI?(value)
 rescue URI::InvalidURIError
   false
 end
+
+__END__
+
+@@ layout
+%html
+  = yield
+
+@@ pretty
+%h1=url
+%div
+  %img(src=url)
+%div
+  -hexes.each do |hex|
+    %span.color(style="background-color:#{hex}; display:inline-block; padding: 1rem 0.5rem;")=hex
+%pre=output
