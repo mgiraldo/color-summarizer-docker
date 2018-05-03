@@ -10,7 +10,9 @@ docker-compose build
 docker-compose up
 ```
 
-This will run the app in port 4567. Test it visiting: `http://localhost:4567/pretty?url=https://c2.staticflickr.com/8/7411/11187582405_2befbdca1e.jpg`
+This will run the app in port 4567. Test it visiting:
+
+`http://localhost:4567/pretty?url=https://c2.staticflickr.com/8/7411/11187582405_2befbdca1e.jpg`
 
 ## Source code
 
