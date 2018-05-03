@@ -2,6 +2,7 @@ require 'sinatra'
 require "sinatra/json"
 require 'open3'
 require 'open-uri'
+require 'ox'
 
 get "/styles.css" do
   send_file("styles/styles.css")
@@ -28,6 +29,10 @@ get '/:type?' do
     type = "json"
     pretty = true
   end
+  if type.eql?("xmljson")
+    type = "xml"
+    pretty = true
+  end
   open(temp_file, "wb") do |file|
     file << open(url).read
   end
@@ -39,7 +44,7 @@ get '/:type?' do
     output = output + line
   }
   hexes = []
-  if pretty
+  if pretty && type.eql?("json")
     json = JSON.parse(output)
     json["data"].each do |key, hex|
       hexes.push(hex)
@@ -52,9 +57,12 @@ get '/:type?' do
   elsif type.eql?("text")
     headers['Content-Type'] = "text/plain"
     output
-  elsif type.eql?("xml")
+  elsif !pretty && type.eql?("xml")
     headers['Content-Type'] = "text/xml"
     output
+  elsif type.eql?("xml")
+    headers['Content-Type'] = "application/json"
+    json Ox.load(output, mode: :hash)
   elsif pretty
     erb :pretty, :locals => {:url => url, :output => output, :image => temp_filename, :hexes => hexes}
   else
