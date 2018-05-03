@@ -10,9 +10,17 @@ docker-compose build
 docker-compose up
 ```
 
-This will run the app in port 4567. Test it visiting:
+This will run the app in port `4567`. Test it visiting:
 
 `http://localhost:4567/pretty?url=https://c2.staticflickr.com/8/7411/11187582405_2befbdca1e.jpg`
+
+You should see something like this:
+
+![example pretty output](demo.jpg)
+
+## Parameters
+
+The app expects a `/:type?url=IMAGE_URL` structure where `type` can be `text`, `json`, `xml`, or `pretty` and `url` has to be a valid URL to an image file. If no `type` is specified `json` will be assumed. Text and XML will return complete image analysis while JSON will only return the five more prominent colors in the image.
 
 ## Source code
 
