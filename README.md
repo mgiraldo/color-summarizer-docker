@@ -20,7 +20,7 @@ You should see something like this:
 
 ## Parameters
 
-The app expects a `/:type?url=IMAGE_URL` request where `type` can be `text`, `json`, `xml`, `xmljson`, or `pretty` and `url` has to be a valid URL to an image file. If no `type` is specified `json` will be assumed. `text` and `xml` will return complete image analysis while `json` will only return the five more prominent colors (clusters) in the image. The `xmljson` type is a “JSON-ified” version of the `xml` output.
+The app expects a `/:type?url=IMAGE_URL` request where `type` can be `text`, `json`, `xml`, or `pretty` and `url` has to be a valid URL to an image file. If no `type` is specified `json` will be assumed.
 
 ## Source code
 
@@ -31,3 +31,5 @@ Get the source code in https://github.com/dpla/color-summarizer-docker
 [Matt Miller](https://twitter.com/thisismmiller) did the [Docker summarizer](https://github.com/thisismattmiller/color-summarizer-docker) on which this project is based.
 
 James Higginbotham's [tutorial on Docker and Sinatra APIs](https://dzone.com/articles/deploying-rest-apis-to-docker-using-ruby-and-sinat).
+
+Sample image via [The Finnish Museum of Photography](https://www.flickr.com/photos/valokuvataiteenmuseo/11187582405/).

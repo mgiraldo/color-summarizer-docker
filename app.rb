@@ -21,17 +21,19 @@ get '/:type?' do
   size = 100
   url = params['url']
   pretty = false
+  is_json = false
   if !validURI?(url)
     halt 400
   end
   type = params['type'] || "json"
   if type.eql?("pretty")
-    type = "json"
-    pretty = true
-  end
-  if type.eql?("xmljson")
     type = "xml"
     pretty = true
+  end
+  if type.eql?("json")
+    # because real json option only returns the cluster hexes
+    type = "xml"
+    is_json = true
   end
   open(temp_file, "wb") do |file|
     file << open(url).read
@@ -43,28 +45,24 @@ get '/:type?' do
     line = o.read.chomp.gsub("#{temp_file}", "").strip
     output = output + line
   }
-  hexes = []
-  if pretty && type.eql?("json")
-    json = JSON.parse(output)
-    json["data"].each do |key, hex|
-      hexes.push(hex)
-    end
-  end
   # File.delete(temp_file)
-  if !pretty && type.eql?("json")
-    headers['Content-Type'] = "application/json"
-    json JSON.parse(output)
+  if !pretty && is_json
+    headers['Content-Type'] = "application/javascript"
+    json Ox.load(output, mode: :hash)
   elsif type.eql?("text")
     headers['Content-Type'] = "text/plain"
     output
   elsif !pretty && type.eql?("xml")
     headers['Content-Type'] = "text/xml"
     output
-  elsif type.eql?("xml")
-    headers['Content-Type'] = "application/json"
-    json Ox.load(output, mode: :hash)
   elsif pretty
-    erb :pretty, :locals => {:url => url, :output => output, :image => temp_filename, :hexes => hexes}
+    hexes = []
+    json = Ox.load(output, mode: :hash)
+    json[:imgdata][1][:clusters][:cluster].each do |cluster|
+      hex = cluster[2][:hex][0][:hex]
+      hexes.push(hex)
+    end
+    erb :pretty, :locals => {:url => url, :output => JSON.pretty_generate(json), :image => temp_filename, :hexes => hexes}
   else
     output
   end
