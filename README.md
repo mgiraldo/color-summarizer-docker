@@ -28,6 +28,6 @@ Get the source code in https://github.com/dpla/color-summarizer-docker
 
 ## Credits
 
-[Matt Miller](https://twitter.com/thisismmiller) did the [Docker version](https://github.com/thisismattmiller/color-summarizer-docker) on which this Docker is based.
+[Matt Miller](https://twitter.com/thisismmiller) did the [Docker summarizer](https://github.com/thisismattmiller/color-summarizer-docker) on which this project is based.
 
 James Higginbotham's [tutorial on Docker and Sinatra APIs](https://dzone.com/articles/deploying-rest-apis-to-docker-using-ruby-and-sinat).
