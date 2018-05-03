@@ -3,6 +3,10 @@ require "sinatra/json"
 require 'open3'
 require 'open-uri'
 
+get "/styles.css" do
+  send_file("styles/styles.css")
+end
+
 get "/image" do
   if File.exist?(temp_file)
     send_file(temp_file)
@@ -52,7 +56,7 @@ get '/:type?' do
     headers['Content-Type'] = "text/xml"
     output
   elsif pretty
-    haml :pretty, :locals => {:url => url, :output => output, :image => temp_filename, :hexes => hexes}
+    erb :pretty, :locals => {:url => url, :output => output, :image => temp_filename, :hexes => hexes}
   else
     output
   end
@@ -77,17 +81,3 @@ rescue URI::InvalidURIError
   false
 end
 
-__END__
-
-@@ layout
-%html
-  = yield
-
-@@ pretty
-%h1=url
-%div
-  %img(src=url)
-%div
-  -hexes.each do |hex|
-    %span.color(style="background-color:#{hex}; display:inline-block; padding: 1rem 0.5rem;")=hex
-%pre=output

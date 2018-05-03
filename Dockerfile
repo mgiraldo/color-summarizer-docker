@@ -29,5 +29,4 @@ RUN cpanm Imager
 # install sinatra app stuff
 ADD Gemfile ${APP_HOME}
 RUN bundle install
-ADD Gemfile.lock ${APP_HOME}
-ADD app.rb ${APP_HOME}
+ADD . ${APP_HOME}

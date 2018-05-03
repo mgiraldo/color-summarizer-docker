@@ -1,0 +1,10 @@
+<h1><%= url %></h1>
+<div>
+  <img class="image" src="<%= url %>" />
+</div>
+<div>
+  <% hexes.each do |hex| %>
+    <span class="color" style="background-color:<%= hex %>;"><%= hex %></span>
+  <% end %>
+  <pre><%= output %></pre>
+</div>
