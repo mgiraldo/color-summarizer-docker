@@ -26,6 +26,8 @@ The app expects a `/:type?url=IMAGE_URL` request where `type` can be `text`, `js
 
 Get the source code in https://github.com/dpla/color-summarizer-docker
 
+Get the Docker container in https://hub.docker.com/r/mgamga/color-summarizer/
+
 ## Credits
 
 [Matt Miller](https://twitter.com/thisismmiller) did the [Docker summarizer](https://github.com/thisismattmiller/color-summarizer-docker) on which this project is based.
