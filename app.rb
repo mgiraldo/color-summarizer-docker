@@ -17,8 +17,8 @@ get "/image" do
 end
 
 get '/:type?' do
-  clusters = 5
-  size = 100
+  clusters = params['clusters'] || 5
+  size = params['size'] || 100
   url = params['url']
   pretty = false
   is_json = false
