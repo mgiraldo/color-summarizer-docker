@@ -4,6 +4,9 @@ require 'open3'
 require 'open-uri'
 require 'ox'
 
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
 get "/styles.css" do
   send_file("styles/styles.css")
 end
