@@ -41,7 +41,7 @@ get '/:type?' do
   open(temp_file, "wb") do |file|
     file << open(url).read
   end
-  convertcmd = "convert #{temp_file} -profile ColorMatchRGB.icc -resize #{size}x PNG24:#{final_file}"
+  convertcmd = "convert #{temp_file} -profile ./profiles/ColorMatchRGB.icc -resize #{size}x PNG24:#{final_file}"
   Open3.popen3(convertcmd) {|i,o,e,t|
   }
   output = ""
