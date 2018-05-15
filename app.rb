@@ -21,7 +21,7 @@ end
 
 get '/:type?' do
   clusters = params['clusters'] || 5
-  size = params['size'] || 100
+  size = params['size'] || 50
   url = params['url']
   pretty = false
   is_json = false
@@ -45,7 +45,7 @@ get '/:type?' do
   Open3.popen3(convertcmd) {|i,o,e,t|
   }
   output = ""
-  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{final_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
+  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{final_file} -space lab -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
   p cmd
   Open3.popen3(cmd) {|i,o,e,t|
     line = o.read.chomp.gsub("#{final_file}", "").strip
