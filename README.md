@@ -30,6 +30,8 @@ Get the Docker container in https://hub.docker.com/r/mgamga/color-summarizer/
 
 ## Credits
 
+Color summarizer by [Martin Krzywinski](http://mkweb.bcgsc.ca/colorsummarizer/)
+
 [Matt Miller](https://twitter.com/thisismmiller) did the [Docker summarizer](https://github.com/thisismattmiller/color-summarizer-docker) on which this project is based.
 
 James Higginbotham's [tutorial on Docker and Sinatra APIs](https://dzone.com/articles/deploying-rest-apis-to-docker-using-ruby-and-sinat).
