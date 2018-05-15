@@ -12,8 +12,8 @@ get "/styles.css" do
 end
 
 get "/image" do
-  if File.exist?(temp_file)
-    send_file(temp_file)
+  if File.exist?(final_file)
+    send_file(final_file)
   else
     halt 404
   end
@@ -41,14 +41,17 @@ get '/:type?' do
   open(temp_file, "wb") do |file|
     file << open(url).read
   end
+  convertcmd = "convert #{temp_file} -profile ColorMatchRGB.icc -resize #{size}x PNG24:#{final_file}"
+  Open3.popen3(convertcmd) {|i,o,e,t|
+  }
   output = ""
-  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{temp_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
+  cmd = "perl -X #{folder}/bin/colorsummarizer -image #{final_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
   p cmd
   Open3.popen3(cmd) {|i,o,e,t|
-    line = o.read.chomp.gsub("#{temp_file}", "").strip
+    line = o.read.chomp.gsub("#{final_file}", "").strip
     output = output + line
   }
-  # File.delete(temp_file)
+  # File.delete(final_file)
   if !pretty && is_json
     headers['Content-Type'] = "application/javascript"
     json Ox.load(output, mode: :hash)
@@ -81,6 +84,14 @@ end
 
 def temp_filename
   "temp.jpg"
+end
+
+def final_file
+  "#{folder}/#{final_filename}"
+end
+
+def final_filename
+  "temp.png"
 end
 
 def validURI?(value)
