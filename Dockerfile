@@ -1,4 +1,4 @@
-FROM ruby:2.3
+FROM ruby:2.6
 
 ENV APP_HOME /usr/src/app
 ENV RACK_ENV production
@@ -21,6 +21,9 @@ RUN cpanm Statistics::Descriptive
 RUN cpanm Statistics::Distributions
 RUN cpanm Statistics::Basic 
 RUN cpanm SVG
+RUN cpanm Graphics::ColorNames::HTML
+RUN cpanm Graphics::ColorNames::Windows
+RUN cpanm Graphics::ColorNames::Netscape
 RUN cpanm Graphics::ColorObject
 RUN cpanm JSON::XS
 RUN cpanm Algorithm::Cluster
