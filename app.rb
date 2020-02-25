@@ -3,20 +3,13 @@ require "sinatra/json"
 require 'open3'
 require 'open-uri'
 require 'ox'
+require 'securerandom'
 
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
 get "/styles.css" do
   send_file("styles/styles.css")
-end
-
-get "/image" do
-  if File.exist?(final_file)
-    send_file(final_file)
-  else
-    halt 404
-  end
 end
 
 get '/:type?' do
@@ -28,6 +21,9 @@ get '/:type?' do
   if !validURI?(url)
     halt 400
   end
+  uuid = uuid()
+  final_file_name = final_file(uuid)
+  temp_file_name = temp_file(uuid)
   type = params['type'] || "json"
   if type.eql?("pretty")
     type = "xml"
@@ -38,20 +34,21 @@ get '/:type?' do
     type = "xml"
     is_json = true
   end
-  open(temp_file, "wb") do |file|
+  open(temp_file_name, "wb") do |file|
     file << open(url).read
   end
-  convertcmd = "convert #{temp_file} -profile ./profiles/ColorMatchRGB.icc -resize #{size}x PNG24:#{final_file}"
+  convertcmd = "convert #{temp_file_name} -profile ./profiles/ColorMatchRGB.icc -resize #{size}x PNG24:#{final_file_name}"
   Open3.popen3(convertcmd) {|i,o,e,t|
   }
   output = ""
-  cmd = "perl -X #{folder}/bin/colorsummarizer -conf summarizer.conf -clip transparent -image #{final_file} -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
+  cmd = "perl -X #{folder}/bin/colorsummarizer -conf summarizer.conf -clip transparent -image #{final_file_name} -width #{size} -#{type} -stats -histogram -clusters #{clusters}"
   p cmd
   Open3.popen3(cmd) {|i,o,e,t|
-    line = o.read.chomp.gsub("#{final_file}", "").strip
+    line = o.read.chomp.gsub("#{final_file_name}", "").strip
     output = output + line
   }
-  # File.delete(final_file)
+  File.delete(final_file_name)
+  File.delete(temp_file_name)
   if !pretty && is_json
     headers['Content-Type'] = "application/javascript"
     json Ox.load(output, mode: :hash)
@@ -68,7 +65,7 @@ get '/:type?' do
       hex = cluster[2][:hex][0][:hex]
       hexes.push(hex)
     end
-    erb :pretty, :locals => {:url => url, :output => JSON.pretty_generate(json), :image => temp_filename, :hexes => hexes}
+    erb :pretty, :locals => {:url => url, :output => JSON.pretty_generate(json), :hexes => hexes}
   else
     output
   end
@@ -78,20 +75,16 @@ def folder
   "/usr/src/app"
 end
 
-def temp_file
-  "#{folder}/#{temp_filename}"
+def temp_file(uuid)
+  "#{folder}/#{uuid}.jpg"
 end
 
-def temp_filename
-  "temp.jpg"
+def uuid
+  SecureRandom.uuid
 end
 
-def final_file
-  "#{folder}/#{final_filename}"
-end
-
-def final_filename
-  "temp.png"
+def final_file(uuid)
+  "#{folder}/#{uuid}.png"
 end
 
 def validURI?(value)
@@ -100,4 +93,3 @@ def validURI?(value)
 rescue URI::InvalidURIError
   false
 end
-
