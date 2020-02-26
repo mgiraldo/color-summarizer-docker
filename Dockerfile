@@ -1,4 +1,5 @@
 FROM ruby:2.6
+FROM python:3.7
 
 ENV APP_HOME /usr/src/app
 ENV RACK_ENV production
