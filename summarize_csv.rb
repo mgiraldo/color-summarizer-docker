@@ -27,6 +27,10 @@ optparse = OptionParser.new do |opts|
     options[:destination] = d
   end
 
+  opts.on("-p", "--processes NUM_PROCESSES", "Num of CPU processes to use (default 16)") do |d|
+    options[:cpu] = d
+  end
+
   opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
@@ -46,7 +50,7 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   exit
 end
 
-CPU = 4
+CPU = options[:cpu] || 16
 csv_file = options[:csv]
 origin = options[:origin]
 destination = options[:destination]
