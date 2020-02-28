@@ -13,6 +13,8 @@ RUN bundle install
 
 FROM python:3
 
+ENV APP_HOME /usr/src/app
+
 WORKDIR ${APP_HOME}
 
 COPY requirements.txt ./
