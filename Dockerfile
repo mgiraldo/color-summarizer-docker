@@ -4,9 +4,12 @@ ENV APP_HOME /usr/src/app
 
 RUN mkdir -p ${APP_HOME}
 
-COPY colorsummarizer-0.77 ${APP_HOME}
-
 WORKDIR ${APP_HOME}
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY colorsummarizer-0.77 ${APP_HOME}
 
 # install cpanminus because less verbose
 RUN curl -L https://cpanmin.us | perl - App::cpanminus

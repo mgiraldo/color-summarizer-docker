@@ -3,7 +3,7 @@ services:
   webapp:
     build:
       context: .
-    command: bundle exec ruby app.rb
+    # command: bundle exec ruby app.rb
     ports:
     - "4567:4567"
     extra_hosts:
