@@ -51,7 +51,7 @@ def summarize_row(access_pid, row):
     image = "%s/%s" % (origin_folder, file_key)
     json = "%s/%s.json" % (destination, access_pid)
     if (Path(json).exists() == False):
-      subprocess.run(["python", "summarize_file.py", "-i", image, "-d", json])
+      subprocess.run(["python", "summarize_file.py", image, json])
   except:
     skipped.append(row)
     pass
