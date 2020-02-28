@@ -1,10 +1,17 @@
-FROM python:3
+FROM ruby:2.6
 
 ENV APP_HOME /usr/src/app
-ENV RACK_ENV production
-ENV MAIN_APP_FILE app.rb
 
 RUN mkdir -p ${APP_HOME}
+
+WORKDIR ${APP_HOME}
+
+ENV RACK_ENV production
+
+ADD Gemfile ${APP_HOME}
+RUN bundle install
+
+FROM python:3
 
 WORKDIR ${APP_HOME}
 
@@ -32,9 +39,4 @@ RUN cpanm JSON::XS
 RUN cpanm Algorithm::Cluster
 RUN cpanm Imager
 
-FROM ruby:2.6
-
-# install sinatra app stuff
-ADD Gemfile ${APP_HOME}
-RUN bundle install
 ADD . ${APP_HOME}
