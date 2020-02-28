@@ -48,7 +48,6 @@ final_file_name = "./#{uuid}.png"
 folder = "./colorsummarizer-0.77"
 
 if !File.file?(filename)
-  puts "File #{filename} does not exist."
   exit
 end  
 

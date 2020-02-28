@@ -1,4 +1,5 @@
 FROM ruby:2.6
+FROM python:3
 
 ENV APP_HOME /usr/src/app
 ENV RACK_ENV production
@@ -9,6 +10,9 @@ RUN mkdir -p ${APP_HOME}
 COPY colorsummarizer-0.77 ${APP_HOME}
 
 WORKDIR ${APP_HOME}
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 # install cpanminus because less verbose
 RUN curl -L https://cpanmin.us | perl - App::cpanminus
