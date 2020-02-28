@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", default="/usr/src/app/files/files-urls.csv", type=str, help="path to CSV file")
 parser.add_argument("-o", "--origin_folder", default="/usr/src/app/files", type=str, help="Folder where images are located")
 parser.add_argument("-d", "--destination", default="/usr/src/app/files/colors_output", type=str, help="Folder where images are located")
-parser.add_argument('-p', '--processes', default=None, type=int, help='how many processes (default: None which lets Python decide)')
+parser.add_argument("-p", "--processes", default=None, type=int, help="how many processes (default: None which lets Python decide)")
 
 args = parser.parse_args()
 
@@ -36,7 +36,7 @@ if (os.path.exists(destination) == False):
   print("Folder %s does not exist." % destination)
   exit()
 
-url_df = pd.read_csv(file, index_col='access_pid')
+url_df = pd.read_csv(file, index_col="access_pid")
 
 count = len(url_df.file_key)
 
@@ -46,12 +46,12 @@ print("Summarizing %s files with %s processes" % (count, (multiprocessing.cpu_co
 
 def summarize_row(access_pid, row):
   try:
-    file_key = row['file_key'].replace("\"","")
+    file_key = row["file_key"].replace("\"","")
     access_pid = access_pid.replace("\"","")
     image = "%s/%s" % (origin_folder, file_key)
     json = "%s/%s.json" % (destination, access_pid)
     if (Path(json).exists() == False):
-      subprocess.run(["summarize_file.py", "-i", image, "-d", json])
+      subprocess.run(["python", "summarize_file.py", "-i", image, "-d", json])
   except:
     skipped.append(row)
     pass
@@ -62,7 +62,7 @@ with multiprocessing.Pool(processes=cpu) as pool:
   pool.close()
   pool.join()
 
-print('Processed %s files in {} seconds'.format(time.time() - starttime) % count)
+print("Processed %s files in {} seconds".format(time.time() - starttime) % count)
 
 if (len(skipped) > 0):
   print("Skipped %s files:", len(skipped))
