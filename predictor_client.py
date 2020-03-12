@@ -15,6 +15,13 @@ args = parser.parse_args()
 host = args.host
 port = args.port
 
+if (host is None and 'PREDICTOR_PORT_4000_TCP_ADDR' in os.environ):
+  host = os.environ['PREDICTOR_PORT_4000_TCP_ADDR']
+
+if (port is None and 'PREDICTOR_PORT_4000_TCP_PORT' in os.environ):
+  port = os.environ['PREDICTOR_PORT_4000_TCP_PORT']
+
+
 def main():
   soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   packet_size = 4096
