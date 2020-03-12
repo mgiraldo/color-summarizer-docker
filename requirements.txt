@@ -1,3 +1,5 @@
 pandas
 tqdm
 xmltodict
+keras
+numpy
