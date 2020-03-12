@@ -4,11 +4,15 @@ Runs the [color summarizer](http://mkweb.bcgsc.ca/color-summarizer/) as a web ap
 
 ## To build and use
 
+> NOTE: **Placeholder**. `docker-compose` tasks not finalised. In the meantime use normal `docker` commands.
+
 ```
 docker pull mgamga/color-summarizer
 docker-compose build
-docker-compose up
 ```
+Run `docker-compose up predictor` to run the object detection/prediction server.
+
+Run `docker-compose up colors` to run the color summarizer server (could use conversion to Python/Flask).
 
 This will run the app in port `4567`. Test it visiting:
 
@@ -20,11 +24,17 @@ You should see something like this:
 
 ## Parameters
 
+### Image summarizer
+
 The app expects a `/:type?url=IMAGE_URL` request where `type` can be `text`, `json`, `xml`, or `pretty` and `url` has to be a valid URL to an image file. If no `type` is specified `json` will be assumed.
+
+### Image predictor
+
+TODO
 
 ## Source code
 
-Get the source code in https://github.com/dpla/color-summarizer-docker
+Get the source code in https://github.com/mgiraldo/color-summarizer-docker
 
 Get the Docker container in https://hub.docker.com/r/mgamga/color-summarizer/
 

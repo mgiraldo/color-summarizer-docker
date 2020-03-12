@@ -11,9 +11,9 @@ import numpy as np
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-f", "--file", default="/Users/mga/Documents/projects/nsw/data/files-urls.csv", type=str, help="path to CSV file")
-parser.add_argument("-o", "--origin_folder", default="/Users/mga/Documents/projects/nsw/files", type=str, help="Folder where images are located")
-parser.add_argument("-d", "--destination", default="/Users/mga/Documents/projects/nsw/data/predictions", type=str, help="Folder where to save results")
+parser.add_argument("-f", "--file", default="/usr/src/app/files/files-urls.csv", type=str, help="path to CSV file")
+parser.add_argument("-o", "--origin_folder", default="/usr/src/app/files", type=str, help="Folder where images are located")
+parser.add_argument("-d", "--destination", default="/usr/src/app/files/predictions", type=str, help="Folder where to save results")
 parser.add_argument("--host", default="127.0.0.1", type=str, help="Prediction server host")
 parser.add_argument("--port", default=4000, type=str, help="Prediction server socket port")
 

@@ -1,9 +1,19 @@
 version: '3'
 services:
-  webapp:
+  predictor:
+    ports:
+    - "4000:4000"
+    extra_hosts:
+      - "localhost:$DOCKERHOST"
     build:
       context: .
-    # command: bundle exec ruby app.rb
+    command: python predictor_server.py
+    image: mgamga/color-summarizer
+  colors:
+    build:
+      context: .
+      dockerfile: Dockerfile-ruby
+    command: bundle exec ruby app.rb
     ports:
     - "4567:4567"
     extra_hosts:
