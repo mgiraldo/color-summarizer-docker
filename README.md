@@ -1,4 +1,8 @@
-# Color Summarizer Web API
+# Image Color Summarizer and Keras/TensorFlow Object Predictor
+
+Python and Ruby convenience files to do color and object analysis in a set of images. 
+
+## Color Summarizer Web API
 
 Runs the [color summarizer](http://mkweb.bcgsc.ca/color-summarizer/) as a web application that can be queried.
 
