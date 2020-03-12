@@ -34,7 +34,7 @@ TODO
 
 ## Source code
 
-Get the source code in https://github.com/mgiraldo/color-summarizer-docker
+Get the source code in https://github.com/mgiraldo/image-summarizer-predictor
 
 Get the Docker container in https://hub.docker.com/r/mgamga/color-summarizer/
 
