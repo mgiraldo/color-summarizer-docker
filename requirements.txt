@@ -3,3 +3,4 @@ tqdm
 xmltodict
 keras
 numpy
+tensorflow
