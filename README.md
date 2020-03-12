@@ -40,7 +40,7 @@ Get the Docker container in https://hub.docker.com/r/mgamga/color-summarizer/
 
 ## Credits
 
-Color summarizer by [Martin Krzywinski](http://mkweb.bcgsc.ca/colorsummarizer/)
+[Color summarizer](http://mkweb.bcgsc.ca/colorsummarizer/) by Martin Krzywinski
 
 [Matt Miller](https://twitter.com/thisismmiller) did the [Docker summarizer](https://github.com/thisismattmiller/color-summarizer-docker) on which this project is based.
 
