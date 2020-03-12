@@ -28,11 +28,11 @@ You should see something like this:
 
 ## Parameters
 
-### Image summarizer
+### Summarizer
 
 The app expects a `/:type?url=IMAGE_URL` request where `type` can be `text`, `json`, `xml`, or `pretty` and `url` has to be a valid URL to an image file. If no `type` is specified `json` will be assumed.
 
-### Image predictor
+### Predictor
 
 TODO
 
@@ -40,7 +40,7 @@ TODO
 
 Get the source code in https://github.com/mgiraldo/image-summarizer-predictor
 
-Get the Docker container in https://hub.docker.com/r/mgamga/color-summarizer/
+Get the Docker container in https://hub.docker.com/r/mgamga/image-summarizer-predictor/
 
 ## Credits
 
