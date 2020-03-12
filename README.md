@@ -1,6 +1,9 @@
-# Image Color Summarizer and Keras/TensorFlow Object Predictor
+# Image Analysis Utils
 
-Python and Ruby convenience files to do color and object analysis in a set of images. 
+Python and Ruby convenience files to do color and object analysis in a set of images:
+
+- Color Summarizer based on [Martin Krzywinski's project](http://mkweb.bcgsc.ca/colorsummarizer/)
+- Keras/TensorFlow Object Predictor
 
 ## Color Summarizer Web API
 
