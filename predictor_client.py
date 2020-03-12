@@ -1,12 +1,13 @@
 import socket
 import sys
+import os
 from io import BytesIO
 import numpy as np
 
 def main():
   soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  host = "127.0.0.1"
-  port = 4000
+  host = os.environ['CAMELOT_PORT_5000_TCP_ADDR'] if 'CAMELOT_PORT_5000_TCP_ADDR' in os.environ else "127.0.0.1"
+  port = int(os.environ['CAMELOT_PORT_5000_TCP_PORT']) if 'CAMELOT_PORT_5000_TCP_PORT' in os.environ else 4000
   packet_size = 4096
 
   try:
