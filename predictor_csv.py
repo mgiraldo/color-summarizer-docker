@@ -65,7 +65,7 @@ def predict_file(id, row):
     # no image
     skipped.append(row)
     return
-  json = "%s/%s.json" % (destination, id)
+  json = "%s/%s.json.gz" % (destination, id)
   if (Path(json).exists() == False):
     try:
       soc.sendall(path.encode("utf8"))
