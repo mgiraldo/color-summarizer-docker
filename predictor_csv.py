@@ -59,6 +59,10 @@ except:
   exit()
 
 def predict_file(id, row):
+  if (not isinstance(row.filename, str)):
+    # no file
+    skipped.append(row)
+    return
   filename = row.filename
   # filename comes 0000XXXXXX.jpg and destination is 0000/0000XXXXXX.jpg
   path = "%s/%s/%s" % (origin_folder, filename[0:4], filename)
@@ -85,8 +89,10 @@ def predict_file(id, row):
       skipped.append(row)
       return
 
-for id, row in tqdm.tqdm(url_df.iterrows(), total=count):
+pbar = tqdm.tqdm(total=count)
+for id, row in url_df.iterrows():
   predict_file(id, row)
+  pbar.update(1)
 
 soc.send(b'--quit--')
 
