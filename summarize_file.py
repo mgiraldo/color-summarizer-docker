@@ -10,8 +10,8 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("image", type=str, help="Path to image to summarize")
 parser.add_argument("destination", type=str, help="Path to destination JSON file")
-parser.add_argument('-n', '--no_convert', action='store_const', const=False, help='skip converting step (add if not providing grayscale images)')
-parser.add_argument('-s', '--silent', action='store_const', const=True)
+parser.add_argument('-n', '--no_convert', action='store_false', help='skip converting step (add if not providing grayscale images)')
+parser.add_argument('-s', '--silent', action='store_true')
 
 args = parser.parse_args()
 
@@ -26,13 +26,13 @@ uuid_str = str(uuid.uuid4())
 final_file_name = "./%s.png" % uuid_str
 folder = "./colorsummarizer-0.77"
 
-if (os.path.exists(image) == False):
-  if (silent is None):
+if (not os.path.exists(image)):
+  if (not silent):
     print("Image %s does not exist." % image)
   exit()
 
-if (os.path.exists(os.path.dirname(destination)) == False):
-  if (silent is None):
+if (not os.path.exists(os.path.dirname(destination))):
+  if (not silent):
     print("Folder does not exist.")
   exit()
 
