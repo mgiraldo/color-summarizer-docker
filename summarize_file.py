@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("image", type=str, help="Path to image to summarize")
 parser.add_argument("destination", type=str, help="Path to destination JSON file")
-parser.add_argument('-n', '--no_convert', action='store_const', const=True, help='skip converting step')
+parser.add_argument('-n', '--no_convert', action='store_const', const=False, help='skip converting step (add if not providing grayscale images)')
 parser.add_argument('-s', '--silent', action='store_const', const=True)
 
 args = parser.parse_args()
@@ -36,7 +36,7 @@ if (os.path.exists(os.path.dirname(destination)) == False):
     print("Folder does not exist.")
   exit()
 
-if (no_convert is None):
+if (no_convert):
   subprocess.run(["convert", image, "-profile", "./profiles/ColorMatchRGB.icc", "-resize", ("%sx" % size), ("PNG24:%s" % final_file_name)])
 else:
   final_file_name = image
@@ -47,7 +47,7 @@ output = process.stdout
 
 json_str = json.dumps(xmltodict.parse(output))
 
-if (no_convert is None):
+if (no_convert):
   os.remove(final_file_name)
 
 file = open(destination,"w") 
