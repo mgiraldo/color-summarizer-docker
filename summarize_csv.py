@@ -47,8 +47,7 @@ print("Summarizing %s files with %s processes" % (count, (multiprocessing.cpu_co
 
 def summarize_row(access_pid, row):
   try:
-    file_key = row["file_key"].replace("\"","")
-    access_pid = access_pid.replace("\"","")
+    file_key = row["file_key"]
     image = "%s/%s" % (origin_folder, file_key)
     json = "%s/%s.json" % (destination, access_pid)
     if (Path(json).exists() == False):
