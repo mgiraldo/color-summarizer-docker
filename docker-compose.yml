@@ -12,13 +12,9 @@ services:
   colors:
     build:
       context: .
-      dockerfile: Dockerfile-ruby
-    command: bundle exec ruby app.rb
+    command: python app.py
     ports:
-    - "4567:4567"
+    - "5000:5000"
     extra_hosts:
       - "localhost:$DOCKERHOST"
-    environment:
-      - RAILS_ENV=production
-      - RACK_ENV=production
     image: mgamga/color-summarizer

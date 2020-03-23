@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>color summarizer</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+
+  <h1>{{ path }}</h1>
+  <div>
+    {% for hex in hexes %}
+      <span class="color" style="background-color:{{ hex }};">{{ hex }}</span>
+    {% endfor %}
+    <div class="output">{{ output }}</div>
+  </div>
+
+  </body>
+</html>

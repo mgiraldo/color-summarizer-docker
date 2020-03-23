@@ -19,11 +19,11 @@ docker-compose build
 ```
 Run `docker-compose up predictor` to run the object detection/prediction server.
 
-Run `docker-compose up colors` to run the color summarizer server (could use conversion to Python/Flask).
+Run `docker-compose up colors` to run the color summarizer server.
 
-This will run the app in port `4567`. Test it visiting:
+This will run the app in port `5000`. Test it visiting:
 
-`http://localhost:4567/pretty?url=https://c2.staticflickr.com/8/7411/11187582405_2befbdca1e.jpg`
+`http://localhost:5000/pretty?url=https://c2.staticflickr.com/8/7411/11187582405_2befbdca1e.jpg`
 
 You should see something like this:
 
