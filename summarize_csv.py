@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", default="/usr/src/app/files/files-urls.csv", type=str, help="path to CSV file (default: /usr/src/app/files/files-urls.csv)")
 parser.add_argument("-o", "--origin_folder", default="/usr/src/app/files", type=str, help="Folder where images are located (default: /usr/src/app/files)")
 parser.add_argument("-d", "--destination", default="/usr/src/app/files/colors_output", type=str, help="Folder where to save results (default: /usr/src/app/files/colors_output)")
-parser.add_argument('--overwrite', action='store_false', help='Overwrite existing json if it exists')
+parser.add_argument('--overwrite', action='store_true', help='Overwrite existing json if it exists')
 parser.add_argument("-p", "--processes", default=None, type=int, help="How many processes (default: None which lets Python decide)")
 
 args = parser.parse_args()
@@ -45,14 +45,14 @@ count = len(url_df.filename)
 
 skipped = []
 
-print("Summarizing %s files with %s processes" % (count, (multiprocessing.cpu_count() if cpu == None else cpu)))
+print("Summarizing %s files with %s processes" % (count, (multiprocessing.cpu_count() if cpu is None else cpu)))
 
 def summarize_row(access_pid, row):
   try:
     filename = row["filename"]
     image = "%s/%s/%s" % (origin_folder, filename[0:4], filename)
     json = "%s/%s.json" % (destination, access_pid)
-    if (Path(json).exists() == False or overwrite):
+    if (Path(json).exists() is False or overwrite):
       subprocess.run(["python", "summarize_file.py", "-s", image, json])
   except:
     skipped.append(row)
