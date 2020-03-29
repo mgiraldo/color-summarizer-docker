@@ -67,5 +67,5 @@ with multiprocessing.Pool(processes=cpu) as pool:
 print("Processed %s files in {} seconds".format(time.time() - starttime) % count)
 
 if (len(skipped) > 0):
-  print("Skipped %s files:", len(skipped))
+  print("Skipped %s files:" % len(skipped))
   print(skipped)

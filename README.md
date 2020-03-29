@@ -35,9 +35,31 @@ You should see something like this:
 
 The app expects a `/:type?url=IMAGE_URL` request where `type` can be `text`, `json`, `xml`, or `pretty` and `url` has to be a valid URL to an image file. If no `type` is specified `json` will be assumed.
 
+See (legacy Ruby code is still there in case you're interested):
+
+- `image_utils/similarity.py`
+- `summarize_file.py`
+- `summarize_csv.py`
+- `app.py` 
+
 ### Predictor
 
 TODO
+
+See:
+
+- `predictor_server.py`
+- `predictor_client.py`
+- `predictor_csv.py`
+
+### Similarity
+
+TODO
+
+See:
+
+- `image_utils/similarity.py`
+- `similar_csv.py`
 
 ## Source code
 

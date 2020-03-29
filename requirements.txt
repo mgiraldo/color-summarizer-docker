@@ -6,3 +6,6 @@ numpy
 tensorflow
 pillow
 flask
+rasterfairy
+sklearn
+pickle
