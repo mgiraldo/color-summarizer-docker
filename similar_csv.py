@@ -81,7 +81,9 @@ grid, nx, ny = similarity.rasterize_tsne(tsne_features, count)
 output_filename = "%s/%s.txt" % (destination, base)
 
 if (not os.path.exists(output_filename) or overwrite):
-  np.savetxt(output_filename, [nx, ny, grid], fmt='%u')
+  # put the width/height info in the first row of the grid
+  grid = np.insert(grid, 0, [nx, ny], axis=0)
+  np.savetxt(output_filename, grid, fmt='%u')
 
 print("Processed %s files in {} seconds".format(time.time() - starttime) % count)
 
