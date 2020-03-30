@@ -59,8 +59,13 @@ for access_pid, row in tqdm.tqdm(url_df.iterrows(), total=count):
     skipped.append(id)
     features.append(np.zeros(shape=(PREDICTION_LENGTH,))) # no predictions for this file so we add empty (all items must be present)
   else:
-    predictions = np.loadtxt(predictions_file)
-    features.append(predictions)
+    try:
+      predictions = np.loadtxt(predictions_file)
+      features.append(predictions)
+    except OSError:
+      # the zip was corrupt
+      skipped.append(id)
+      features.append(np.zeros(shape=(PREDICTION_LENGTH,)))
 
 if (len(skipped) > 0):
   print("Skipped %s files." %  len(skipped))
