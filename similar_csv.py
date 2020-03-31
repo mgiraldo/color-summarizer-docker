@@ -52,24 +52,34 @@ print("Getting similarity for %s files." % count)
 skipped = []
 features = []
 
+def skip_row(id, features, skipped):
+  skipped.append(id)
+  features.append(np.zeros(shape=(PREDICTION_LENGTH,)))
+  return features, skipped
+
 for access_pid, row in tqdm.tqdm(url_df.iterrows(), total=count):
   id = row['id']
   predictions_file = "%s/%s.json.gz" % (predictions_folder, id)
   if (not os.path.exists(predictions_file)):
-    skipped.append(id)
-    features.append(np.zeros(shape=(PREDICTION_LENGTH,))) # no predictions for this file so we add empty (all items must be present)
+    # no predictions for this file
+    features, skipped = skip_row(id, features, skipped)
   else:
     try:
       predictions = np.loadtxt(predictions_file)
-      features.append(predictions)
+      if (len(predictions) == PREDICTION_LENGTH):
+        features.append(predictions)
+      else:
+        # wrong file length
+        features, skipped = skip_row(id, features, skipped)
+
     except OSError:
       # the zip was corrupt
-      skipped.append(id)
-      features.append(np.zeros(shape=(PREDICTION_LENGTH,)))
+      features, skipped = skip_row(id, features, skipped)
 
 if (len(skipped) > 0):
   print("Skipped %s files." %  len(skipped))
 
+features = np.array(features)
 pca_features, pca = similarity.transform_features(features)
 pca_filename = "%s/%s_pca.p" % (destination, base)
 

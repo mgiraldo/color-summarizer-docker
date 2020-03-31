@@ -12,16 +12,25 @@ def transform_features(features):
   components = DEFAULT_COMPONENT_SIZE
   if (len(features) < components):
     components = len(features)
+  print("one")
   features = np.array(features)
+  print("two")
   pca = PCA(n_components=components)
+  print("three")
   pca.fit(features)
+  print("four")
   pca_features = pca.transform(features)
+  print("five")
   return pca_features, pca
 
 def tsne_ify(pca_features):
+  print("six")
   X = np.array(pca_features)
+  print("seven")
   tsne_features = TSNE(n_components=2, learning_rate=150, perplexity=30, angle=0.2, verbose=2).fit_transform(X)
+  print("eight")
   tx, ty = get_tsne_xy(tsne_features)
+  print("nine")
   return tsne_features, tx, ty
 
 def get_tsne_xy(tsne):
@@ -32,9 +41,11 @@ def get_tsne_xy(tsne):
 
 def rasterize_tsne(tsne, count):
   side = math.sqrt(count)
-  nx = math.floor(side)
-  ny = math.ceil(side)
+  nx = math.ceil(side)
+  ny = round(side)
+  print("ten %s %s %s" % (side, nx, ny))
   grid_assignment = rasterfairy.transformPointCloud2D(tsne, target=(nx, ny))
+  print("eleven")
   grid = grid_assignment[0]
   return grid, nx, ny
 
