@@ -65,19 +65,16 @@ for access_pid, row in tqdm.tqdm(url_df.iterrows(), total=count):
     features, skipped = skip_row(id, features, skipped)
   else:
     try:
+      # TODO: this seems to be printing info even though it's in try/except
       predictions = np.loadtxt(predictions_file)
       if (len(predictions) == PREDICTION_LENGTH):
         features.append(predictions)
       else:
         # wrong file length
         features, skipped = skip_row(id, features, skipped)
-
-    except OSError:
+   except OSError:
       # the zip was corrupt
       features, skipped = skip_row(id, features, skipped)
-
-if (len(skipped) > 0):
-  print("Skipped %s files." %  len(skipped))
 
 features = np.array(features)
 pca_features, pca = similarity.transform_features(features)
