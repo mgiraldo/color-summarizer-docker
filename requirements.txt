@@ -8,3 +8,5 @@ pillow
 flask
 rasterfairy
 sklearn
+umap-learn
+numba

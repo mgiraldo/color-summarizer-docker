@@ -40,6 +40,9 @@ if (not os.path.exists(destination)):
 # get the base name for output file creation
 fullname = os.path.basename(file)
 base = os.path.splitext(fullname)[0]
+pca_filename = "%s/%s_pca.p" % (destination, base)
+umap_filename = "%s/%s_umap.p" % (destination, base)
+output_filename = "%s/%s.txt" % (destination, base)
 
 starttime = time.time()
 
@@ -49,56 +52,75 @@ count = len(url_df.filename)
 
 print("Getting similarity for %s files." % count)
 
-skipped = []
-features = []
-
 def skip_row(id, features, skipped):
   skipped.append(id)
   features.append(np.zeros(shape=(PREDICTION_LENGTH,)))
   return features, skipped
 
-for access_pid, row in tqdm.tqdm(url_df.iterrows(), total=count):
-  id = row['id']
-  predictions_file = "%s/%s.json.gz" % (predictions_folder, id)
-  if (not os.path.exists(predictions_file)):
-    # no predictions for this file
-    features, skipped = skip_row(id, features, skipped)
-  else:
-    try:
-      # TODO: this seems to be printing info even though it's in try/except
-      predictions = np.loadtxt(predictions_file)
-      if (len(predictions) == PREDICTION_LENGTH):
-        features.append(predictions)
-      else:
-        # wrong file length
-        features, skipped = skip_row(id, features, skipped)
-   except OSError:
-      # the zip was corrupt
+def load_predictions():
+  skipped = []
+  features = []
+  for access_pid, row in tqdm.tqdm(url_df.iterrows(), total=count):
+    id = row['id']
+    predictions_file = "%s/%s.json.gz" % (predictions_folder, id)
+    if (not os.path.exists(predictions_file)):
+      # no predictions for this file
       features, skipped = skip_row(id, features, skipped)
+    else:
+      try:
+        # TODO: this seems to be printing info even though it's in try/except
+        predictions = np.loadtxt(predictions_file)
+        if (len(predictions) == PREDICTION_LENGTH):
+          features.append(predictions)
+        else:
+          # wrong file length
+          features, skipped = skip_row(id, features, skipped)
+      except OSError:
+        # the zip was corrupt
+        features, skipped = skip_row(id, features, skipped)
+  if (len(skipped) > 0):
+    print("Skipped %s files:" % len(skipped))
+    print(skipped)
+  return features
 
-features = np.array(features)
-pca_features, pca = similarity.transform_features(features)
-pca_filename = "%s/%s_pca.p" % (destination, base)
+pca_exists = os.path.exists(pca_filename)
+umap_exists = os.path.exists(umap_filename)
+output_exists = os.path.exists(output_filename)
 
-if (not os.path.exists(pca_filename) or overwrite):
-  pickle.dump([url_df, pca_features, pca], open(pca_filename, 'wb'))
+def do_pca(features):
+  features = np.array(features)
+  pca_features, pca = similarity.transform_features(features)
+  if (not pca_exists or overwrite):
+    pickle.dump([url_df, pca_features, pca], open(pca_filename, 'wb'))
+  return pca_features, pca
 
-tsne_features, tx, ty = similarity.tsne_ify(pca_features)
-tsne_filename = "%s/%s_tsne.p" % (destination, base)
+def do_umap(pca_features):
+  umap_features, tx, ty = similarity.umap_ify(pca_features)
+  if (not umap_exists or overwrite):
+    pickle.dump([umap_features, tx, ty], open(umap_filename, 'wb'))
+  return umap_features, tx, ty
 
-if (not os.path.exists(tsne_filename) or overwrite):
-  pickle.dump([tsne_features, tx, ty], open(tsne_filename, 'wb'))
-
-grid, nx, ny = similarity.rasterize_tsne(tsne_features, count)
-output_filename = "%s/%s.txt" % (destination, base)
-
-if (not os.path.exists(output_filename) or overwrite):
+if (overwrite or (not pca_exists and not umap_exists)):
+  features = load_predictions()
+else:
+  # first do pca
+  if (pca_exists):
+    print("loaded pca %s" % pca_filename)
+    url_df, pca_features, pca = pickle.load(open(pca_filename, 'rb'))
+  else:
+    features = load_predictions()
+    pca_features, pca = do_pca(features)
+  # now umap
+  if (umap_exists):
+    print("loaded umap %s" % umap_filename)
+    umap_features, tx, ty = pickle.load(open(umap_filename, 'rb'))
+  else:
+    umap_features, tx, ty = do_umap(pca_features)
+  # now rasterize
+  # we don't ask if it exists because then what's the point of running this file?
+  grid, nx, ny = similarity.rasterize_umap(umap_features, count)
   # put the width/height info in the first row of the grid
   grid = np.insert(grid, 0, [nx, ny], axis=0)
   np.savetxt(output_filename, grid, fmt='%u')
 
 print("Processed %s files in {} seconds".format(time.time() - starttime) % count)
-
-if (len(skipped) > 0):
-  print("Skipped %s files:" % len(skipped))
-  print(skipped)

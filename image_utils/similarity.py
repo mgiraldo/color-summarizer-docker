@@ -5,6 +5,7 @@ from PIL import Image
 import rasterfairy
 import math
 import numpy as np
+import umap
 
 DEFAULT_COMPONENT_SIZE = 300
 
@@ -35,6 +36,25 @@ def rasterize_tsne(tsne, count):
   nx = math.ceil(side)
   ny = round(side)
   grid_assignment = rasterfairy.transformPointCloud2D(tsne, target=(nx, ny))
+  grid = grid_assignment[0]
+  return grid, nx, ny
+
+def umap_ify(pca_features):
+  umap_features = umap.UMAP().fit_transform(pca_features)
+  tx, ty = get_umap_xy(umap_features)
+  return umap_features, tx, ty
+
+def get_umap_xy(umap):
+  tx, ty = umap[:,0], umap[:,1]
+  tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
+  ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
+  return tx, ty
+
+def rasterize_umap(umap, count):
+  side = math.sqrt(count)
+  nx = math.ceil(side)
+  ny = round(side)
+  grid_assignment = rasterfairy.transformPointCloud2D(umap, target=(nx, ny))
   grid = grid_assignment[0]
   return grid, nx, ny
 
