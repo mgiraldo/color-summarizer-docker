@@ -40,7 +40,10 @@ def rasterize_tsne(tsne, count):
   return grid, nx, ny
 
 def umap_ify(pca_features):
-  umap_features = umap.UMAP().fit_transform(pca_features)
+  n_neighbors = 6
+  if (len(pca_features) < n_neighbors):
+    n_neighbors = len(pca_features)
+  umap_features = umap.UMAP(n_components=2, n_neighbors=n_neighbors, metric='correlation').fit_transform(pca_features)
   tx, ty = get_umap_xy(umap_features)
   return umap_features, tx, ty
 
