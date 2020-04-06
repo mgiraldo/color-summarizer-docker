@@ -4,7 +4,7 @@ Python and Ruby convenience files to do color and object analysis in a set of im
 
 - Color Summarizer based on [Martin Krzywinski's project](http://mkweb.bcgsc.ca/colorsummarizer/)
 - Keras/TensorFlow Object Predictor
-- Scikit-Learn PCA/t-SNE image similarity based on [Gene Kogan's work](https://ml4a.github.io/)
+- Scikit-Learn PCA/t-SNE/UMAP image similarity based on [Gene Kogan's work](https://ml4a.github.io/)
 
 ## Color Summarizer Web API
 
