@@ -61,7 +61,6 @@ You should see something like this:
 
 See (legacy Ruby code is still there in case you're interested):
 
-- `/image_utils/similarity.py`
 - `/summarize_file.py`
 - `/summarize_csv.py`
 - `/app.py` 
