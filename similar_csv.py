@@ -100,8 +100,18 @@ def do_umap(pca_features):
     pickle.dump([umap_features, tx, ty], open(umap_filename, 'wb'))
   return umap_features, tx, ty
 
+def do_similarity(features):
+  # we don't ask if it exists because then what's the point of running this file?
+  count = len(features)
+  grid, nx, ny = similarity.rasterize_umap(features, count)
+  # put the width/height info in the first row of the grid
+  grid = np.insert(grid, 0, [nx, ny], axis=0)
+  np.savetxt(output_filename, grid, fmt='%u')
+
 if (overwrite or (not pca_exists and not umap_exists)):
   features = load_predictions()
+  pca_features, pca = do_pca(features)
+  umap_features, tx, ty = do_umap(pca_features)
 else:
   # first do pca
   if (pca_exists):
@@ -117,10 +127,6 @@ else:
   else:
     umap_features, tx, ty = do_umap(pca_features)
   # now rasterize
-  # we don't ask if it exists because then what's the point of running this file?
-  grid, nx, ny = similarity.rasterize_umap(umap_features, count)
-  # put the width/height info in the first row of the grid
-  grid = np.insert(grid, 0, [nx, ny], axis=0)
-  np.savetxt(output_filename, grid, fmt='%u')
+  do_similarity(umap_features)
 
 print("Processed %s files in {} seconds".format(time.time() - starttime) % count)
